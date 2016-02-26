@@ -54,6 +54,7 @@ $app->get('/', function () use ($app) {
     print_r($timeline);
 
     return "";
+
 });
 
 $app->run();
