@@ -8,7 +8,6 @@
     "gecko-packages/gecko-silex-config-service" : "0.1"
   },
   "require-dev": {
-    "heroku/heroku-buildpack-php": "*",
-    "sorien/silex-pimple-dumper" : "~1.0"
+    "heroku/heroku-buildpack-php": "*"
   }
 }

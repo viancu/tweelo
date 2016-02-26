@@ -22,9 +22,6 @@ $app->register(new TTools\Provider\Silex\TToolsServiceProvider(), array(
     'ttools.consumer_secret' => 'OSgwYxbYqwiZZ9nryJe3KersYjTwsRQtDl92facWpt7eKwltT2'
 ));
 
-// For PHP Storm DI resolution
-$app->register(new Sorien\Provider\PimpleDumpProvider());
-
 $env = getenv('APP_ENV') ?: 'prod';
 // Our web handlers
 
