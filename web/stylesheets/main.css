@@ -1,36 +1,47 @@
-.jumbotron {
-  background: #532F8C;
-  color: white;
-  padding-bottom: 80px;
+* {
+    border-radius: 0 !important;
 }
-.jumbotron .btn-primary {
-  background: #845ac7;
-  border-color: #845ac7;
+html, body, .container-fluid, .map {
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
-.jumbotron .btn-primary:hover {
-  background: #7646c1;
+
+
+#map {
+    height:100%;
+    width: 100%;
 }
-.jumbotron p {
-  color: #d9ccee;
-  max-width: 75%;
-  margin: 1em auto 2em;
+
+.row, .col-xs-12,.col-xs-6, .col-xs-3 {
+    margin: 0;
+    padding: 0;
 }
-.jumbotron h1 {
-  font-size: 40px;
+
+.ui-menu .ui-menu-item a, .ui-menu .ui-menu-item a.ui-state-hover, .ui-menu .ui-menu-item a.ui-state-active {
+    font-weight: normal;
+    margin: -1px;
+    text-align: left;
+    font-size: 14px;
 }
-.navbar + .jumbotron {
-  margin-top: -20px;
+
+.ui-autocomplete-loading {
+    background: white url("/images/ui-anim_basic_16x16.gif") right center no-repeat;
 }
-.jumbotron .lang-logo {
-  display: block;
-  background: #B01302;
-  border-radius: 50%;
-  overflow: hidden;
-  width: 100px;
-  height: 100px;
-  margin: auto;
-  border: 2px solid white;
+.map-box {
+    box-sizing: border-box;
+    padding-bottom:2em;
+    z-index:1;
 }
-.jumbotron .lang-logo img {
-  max-width: 100%;
+.footer{
+    height: 2em;
+    position: absolute;
+    bottom: 0;
+    left:0;
+    width:100%;
+    z-index:2;
+}
+
+.input-group {
+  border:none;
 }
