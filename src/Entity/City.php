@@ -9,20 +9,11 @@ namespace Tweelo\Entity;
 class City
 {
     /** @var  string */
-    public $name = null;
+    private $name = null;
     /** @var  string */
-    public $region = null;
+    private $region = null;
     /** @var  string */
-    public $country = null;
-    /** @var  CityGeoLocation */
-    public $geoLocation = null;
-
-    public function __construct($name, $region, $country)
-    {
-        $this->setName($name)
-            ->setRegion($region)
-            ->setCountry($country);
-    }
+    private $country = null;
 
     /**
      * @return string
@@ -79,20 +70,10 @@ class City
     }
 
     /**
-     * @return CityGeoLocation
+     * @return string
      */
-    public function getGeoLocation()
+    public function __toString()
     {
-        return $this->geoLocation;
-    }
-
-    /**
-     * @param CityGeoLocation $geoLocation
-     * @return City
-     */
-    public function setGeoLocation($geoLocation)
-    {
-        $this->geoLocation = $geoLocation;
-        return $this;
+        return join(', ', [$this->getName(), $this->getRegion(), $this->getCountry()]);
     }
 }

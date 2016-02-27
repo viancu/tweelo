@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row map map-box">
+            <div class="col-xs-12 map">
+                <div id="map"></div>
+            </div>
+        </div>
+        <div class="row footer">
+            <form onsubmit="return false;">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="city" id="city"
+                               placeholder="Enter city name">
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                    <button type="button" class="btn btn-primary" id="search" style="width: 100%">Search</button>
+                </div>
+                <div class="col-xs-3">
+                    <button type="button" class="btn btn-primary" id="history"  style="width: 100%">History</button>
+                </div>
+            </form>
+        </div>
+    </div> <!-- row -->
+{% endblock %}

@@ -2,12 +2,12 @@
 
 namespace Tweelo\Entity;
 
-class CityGeoLocation
+class Position
 {
     /** @var  float */
-    public $latitude;
-    /** @var float*/
-    public $longitude;
+    private $latitude;
+    /** @var float */
+    private $longitude;
 
     /**
      * @return float
@@ -19,7 +19,7 @@ class CityGeoLocation
 
     /**
      * @param float $latitude
-     * @return CityGeoLocation
+     * @return Position
      */
     public function setLatitude($latitude)
     {
@@ -37,7 +37,7 @@ class CityGeoLocation
 
     /**
      * @param float $longitude
-     * @return CityGeoLocation
+     * @return Position
      */
     public function setLongitude($longitude)
     {
