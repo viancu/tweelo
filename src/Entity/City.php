@@ -14,6 +14,8 @@ class City
     private $region = null;
     /** @var  string */
     private $country = null;
+    /** @var Position */
+    private $position = null;
 
     /**
      * @return string
@@ -66,6 +68,24 @@ class City
     public function setCountry($country)
     {
         $this->country = $country;
+        return $this;
+    }
+
+    /**
+     * @return Position
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
+    /**
+     * @param Position $position
+     * @return City
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
         return $this;
     }
 

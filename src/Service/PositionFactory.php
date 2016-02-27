@@ -18,8 +18,8 @@ class PositionFactory
     public static function create($latitude, $longitude)
     {
         $position = new Position();
-        $position->setLatitude(floatval($latitude))
-            ->setLongitude(floatval($longitude));
+        $position->setLatitude(floatval(trim($latitude)))
+            ->setLongitude(floatval(trim($longitude)));
         return $position;
     }
 }

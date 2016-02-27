@@ -41,3 +41,7 @@ html, body, .container-fluid, .map {
 .input-group {
   border:none;
 }
+
+.avatar {
+    border-radius: 50%;
+}

@@ -6,6 +6,6 @@ $app['params'] = [
     ],
     'tweelo' => [
         'radius' => '50km',
-        'cacheLifeTime' => 3600
+        'caching_life_time' => 3600
     ]
 ];

@@ -4,8 +4,11 @@ namespace Tweelo\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Silex\Application;
+use Tweelo\Service\CachingProxy;
 use Tweelo\Service\CityFactory;
 use Tweelo\Service\GeoService;
+use Tweelo\Service\PositionFactory;
+use Tweelo\Service\TwitterService;
 
 /**
  * Class DefaultController
@@ -13,11 +16,15 @@ use Tweelo\Service\GeoService;
  */
 class DefaultController
 {
+    /** @var GeoService  */
     private $geoService;
+    /** @var  TwitterService */
+    private $twitterProxyService;
 
-    public function __construct(GeoService $geoService)
+    public function __construct(GeoService $geoService, $twitterProxyService)
     {
         $this->geoService = $geoService;
+        $this->twitterProxyService = $twitterProxyService;
     }
 
     /**
@@ -75,26 +82,25 @@ class DefaultController
 
         $lat = $request->get('lat');
         $lng = $request->get('lng');
+
+        $position  = PositionFactory::create($lat, $lng);
+
         $fqcn = $request->get('city');
         $city = CityFactory::createFromFullyQualifiedCityName($fqcn);
+        $city->setPosition($position);
 
-         $geocode = join(',', [
-            $lat,
-            $lng,
-            $app['params']['tweelo']['radius']
-        ]);
-
-        $tweets = $twitterApi->get('/search/tweets.json', [
-            'q' => 'bangkok',
-            'geocode' => $geocode,
-            'count' => 20
-        ]);
-
-        if (isset($tweets['error']) && $tweets['error'] == 401) {
-            throw new \Exception("401 Twitter authentication error");
+        $tweets = $this->twitterProxyService->getTweetsForCity($city);
+        $response = [];
+        foreach($tweets as $tweet) {
+            $response[] = [
+                'text' => $tweet->getText(),
+                'profile_image_url' => $tweet->getProfileImageUrl(),
+                'lat' => $tweet->getPosition()->getLatitude(),
+                'lng' => $tweet->getPosition()->getLongitude(),
+                'created_at' => $tweet->getCreatedAt()->format('r')
+            ];
         }
-        //print_r($tweets);
 
-        return $app->json($tweets);
+        return $app->json($response);
     }
 }

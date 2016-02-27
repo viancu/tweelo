@@ -2,7 +2,58 @@
 
 namespace Tweelo\Service;
 
+use TTools\App;
+use Tweelo\Entity\City;
+use Tweelo\Entity\Tweet;
+
 class TwitterService
 {
+    private $twitterApi;
+    private $radius;
+
+    public function __construct(App $twitterApi, $radius)
+    {
+        $this->twitterApi = $twitterApi;
+        $this->radius = $radius;
+    }
+
+    /**
+     * @param City $city
+     * @return Tweet[]
+     * @throws \Exception
+     */
+    public function getTweetsForCity(City $city)
+    {
+        $tweets = [];
+        $geocode = join(',', [
+            $city->getPosition()->getLatitude(),
+            $city->getPosition()->getLongitude(),
+            $this->radius
+        ]);
+
+        $tweetsData = $this->twitterApi->get('/search/tweets.json', [
+            'q' => strtolower($city->getName()),
+            'geocode' => $geocode,
+            'count' => 20
+        ]);
+
+        if (isset($tweets['error']) && $tweets['error'] == 401) {
+            throw new \Exception("401 Twitter authentication error");
+        }
+
+        foreach($tweetsData['statuses'] as $status) {
+            if($status['coordinates'] !== null) {
+                $tweets[] = TweetFactory::create(
+                    $status['text'],
+                    $status['user']['profile_image_url'],
+                    $status['geo']['coordinates'][0],
+                    $status['geo']['coordinates'][1],
+                    $status['created_at']
+                );
+            }
+        }
+
+        return $tweets;
+    }
 
 }
