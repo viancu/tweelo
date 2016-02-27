@@ -4,6 +4,10 @@ namespace Tweelo\Service;
 
 use Moust\Silex\Cache\CacheInterface;
 
+/**
+ * Class CachingProxy
+ * @package Tweelo\Service
+ */
 class CachingProxy
 {
     /** @var CacheInterface|null */
@@ -12,6 +16,12 @@ class CachingProxy
     /** @var  integer */
     private $cachingLifeTime;
 
+    /**
+     * CachingProxy constructor.
+     * @param CacheInterface $cache
+     * @param $instance
+     * @param $cachingLifeTime
+     */
     public function __construct(CacheInterface $cache, $instance, $cachingLifeTime)
     {
         $this->cache = $cache;
@@ -19,6 +29,11 @@ class CachingProxy
         $this->cachingLifeTime = $cachingLifeTime;
     }
 
+    /**
+     * @param $method
+     * @param $arguments
+     * @return mixed
+     */
     public function __call($method, $arguments)
     {
         if (substr($method, 0, 3) !== 'get') {

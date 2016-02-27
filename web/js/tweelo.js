@@ -15,13 +15,12 @@ $(document).ready(function () {
 });
 
 function drawMap(lat, lng) {
-    console.log("draw at: " + lat + " " + lng);
-    tweelo.map = new GMaps({
-        el: '#map',
-        lat: lat,
-        lng: lng,
-        zoom: 13
+    tweelo.map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 13,
+        center: {lat: lat, lng: lng},
+        disableDefaultUI: true
     });
+    console.log("draw at: " + lat + " " + lng);
 }
 
 function getUserCurrentLocation() {
@@ -75,12 +74,26 @@ function changePositionForCity(city) {
         $.getJSON('tweets', {lat:position.lat, lng:position.lng, city:city}, function(data){
             tweelo.tweets = data;
             $.each(data, function(index, tweet){
-                console.log(tweet);
-                tweelo.map.drawOverlay({
-                    lat: tweet.lat,
-                    lng: tweet.lng,
-                    content: '<div><img src="'+ tweet.profile_image_url +'"/></div>'
+                var marker = new google.maps.Marker({
+                    position: {lat:tweet.lat, lng:tweet.lng},
+                    map: tweelo.map,
+                    icon: {
+                        url: tweet.profile_image_url,
+                        size: new google.maps.Size(48, 48)
+                    }
                 });
+                var infowindow = new google.maps.InfoWindow({
+                    content: tweet.text,
+                    maxWidth: 200
+                });
+                marker.addListener('click', function() {
+                    infowindow.open(tweelo.map, marker);
+                });
+                //tweelo.map.drawOverlay({
+                //    lat: tweet.lat,
+                //    lng: tweet.lng,
+                //    content: '<div><img src="'+ tweet.profile_image_url +'"/></div>'
+                //});
             });
         });
     });
