@@ -35,8 +35,7 @@ $app->register(new TTools\Provider\Silex\TToolsServiceProvider(), array(
 ));
 $app->register(new Moust\Silex\Provider\CacheServiceProvider(), array(
     'cache.options' => array(
-        'driver' => 'file',
-        'cache_dir' => __DIR__ . '/cache'
+        'driver' => 'apc'
     ),
 ));
 
@@ -54,8 +53,6 @@ $app->error(function (\Exception $e, $code) use ($app) {
 
     //return $app['twig']->render('404.twig',['message' => $message]);
 });
-
-$app_env = "dev";
 $app['debug'] = true;
 if (isset($app_env) && in_array($app_env, ['prod', 'dev', 'test', 'staging'])) {
     $app['env'] = $app_env;
