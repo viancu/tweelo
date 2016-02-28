@@ -9,7 +9,7 @@
     "ttools/ttools": "~2.1",
     "gecko-packages/gecko-silex-config-service" : "0.1",
     "php-curl-class/php-curl-class": "^4.10",
-    "moust/silex-cache": "1.0.*@dev",
+    "moust/silex-cache": "1.0.*@dev"
   },
   "require-dev": {
     "heroku/heroku-buildpack-php": "*",
