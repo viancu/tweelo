@@ -3,6 +3,7 @@
 namespace Tweelo\Service;
 
 use Moust\Silex\Cache\CacheInterface;
+use Tweelo\Exception\TweeloException;
 
 /**
  * Class CachingProxy
@@ -33,19 +34,24 @@ class CachingProxy
      * @param $method
      * @param $arguments
      * @return mixed
+     * @throws TweeloException
      */
     public function __call($method, $arguments)
     {
-        if (substr($method, 0, 3) !== 'get') {
-            $result = call_user_func_array([$this->instance, $method], $arguments);
-        } else {
-            $uniqueId = $method . md5(serialize($arguments));
-            $result = $this->cache->fetch($uniqueId);
-
-            if ($result === false) {
+        try {
+            if (substr($method, 0, 3) !== 'get') {
                 $result = call_user_func_array([$this->instance, $method], $arguments);
-                $this->cache->store($uniqueId, $result, $this->cachingLifeTime);
+            } else {
+                $uniqueId = $method . md5(serialize($arguments));
+                $result = $this->cache->fetch($uniqueId);
+
+                if ($result === false) {
+                    $result = call_user_func_array([$this->instance, $method], $arguments);
+                    $this->cache->store($uniqueId, $result, $this->cachingLifeTime);
+                }
             }
+        } catch (TweeloException $e) {
+            throw new TweeloException($e->getMessage());
         }
 
         return $result;

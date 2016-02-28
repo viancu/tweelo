@@ -4,6 +4,7 @@ namespace Tweelo\Service;
 
 use Tweelo\Entity\City;
 use Tweelo\Entity\Position;
+use Tweelo\Exception\TweeloException;
 
 class GeoService
 {
@@ -20,9 +21,20 @@ class GeoService
     /**
      * @param $term
      * @return \Tweelo\Entity\City[]
+     * @throws TweeloException
      */
     public function getCitiesByTerm($term)
     {
+        $term = trim($term);
+
+        if ($term == '') {
+            throw new TweeloException("City name is empty");
+        }
+
+        if (strlen($term) < 3) {
+            throw new TweeloException("City name length must be 3 chars or more");
+        }
+
         return $this->cityApiService->searchCityByTerm($term);
     }
 

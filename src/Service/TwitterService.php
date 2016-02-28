@@ -5,6 +5,7 @@ namespace Tweelo\Service;
 use TTools\App;
 use Tweelo\Entity\City;
 use Tweelo\Entity\Tweet;
+use Tweelo\Exception\TweeloException;
 
 class TwitterService
 {
@@ -37,8 +38,8 @@ class TwitterService
             'count' => 20
         ]);
 
-        if (isset($tweets['error']) && $tweets['error'] == 401) {
-            throw new \Exception("401 Twitter authentication error");
+        if (isset($tweetsData['error'])) {
+            throw new TweeloException("No tweets found");
         }
 
         foreach($tweetsData['statuses'] as $status) {

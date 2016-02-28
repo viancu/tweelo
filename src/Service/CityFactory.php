@@ -18,10 +18,22 @@ class CityFactory
      */
     public static function create($name, $region, $country)
     {
-        $city  = new City();
-        $city->setName(trim($name))
-            ->setRegion(trim($region))
-            ->setCountry(trim($country));
+        if (!$name || !$region || !$country) {
+            return false;
+        }
+
+        $name = trim($name);
+        $region = trim($region);
+        $country = trim($country);
+
+        if ($name === '' || $region === '' && $country === '') {
+            return false;
+        }
+
+        $city = new City();
+        $city->setName($name)
+            ->setRegion($region)
+            ->setCountry($country);
 
         return $city;
     }
@@ -30,8 +42,11 @@ class CityFactory
      * @param $fqcn
      * @return City
      */
-    public static function createFromFullyQualifiedCityName($fqcn) {
+    public static function createFromFullyQualifiedCityName($fqcn)
+    {
         list($name, $region, $country) = explode(',', $fqcn);
+
         return CityFactory::create($name, $region, $country);
+
     }
 }
