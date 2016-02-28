@@ -2,16 +2,30 @@ var tweelo = tweelo || {
         map: null,
         tweets: null
     };
+
+if(!String.linkify) {
+    String.prototype.linkify = function() {
+        var urlPattern = /\b(?:https?|ftp):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|]/gim;
+        var pseudoUrlPattern = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+        var userPattern = /(^|\s)@(\w+)/gim;
+        var hashTagPattern = /(^|\s)#(\w+)/gim;
+
+        return this
+            .replace(urlPattern, '<a href="$&" target="_blank">$&</a>')
+            .replace(pseudoUrlPattern, '$1<a href="http://$2" target="_blank">$2</a>')
+            .replace(userPattern, '<a href="http://www.twitter.com/$2" target="_blank">$&</a>')
+            .replace(hashTagPattern, '<a href="http://www.twitter.com/hashtag/$2?src=hash" target="_blank">$&</a>')
+    };
+}
+
 $(document).ready(function () {
     getUserCurrentLocation();
     $('#search').on('click', searchCities);
-    $(document).on('keypress', '#city', function(e) {
+    $(document).on('keypress', '#city', function (e) {
         if (e.which == 13) {
             $('#search').trigger('click');
         }
     });
-
-
 });
 
 function drawMap(lat, lng) {
@@ -20,7 +34,17 @@ function drawMap(lat, lng) {
         center: {lat: lat, lng: lng},
         disableDefaultUI: true
     });
+
+
     console.log("draw at: " + lat + " " + lng);
+}
+
+function createCityTitle(city) {
+    var cityData = city.split(",");
+    var div =  document.createElement('DIV');
+    div.className = "city-title";
+    div.innerHTML = 'TWEETS ABOUT ' + cityData[0].toUpperCase();
+    return div;
 }
 
 function getUserCurrentLocation() {
@@ -47,11 +71,10 @@ function searchCities(term) {
     var term = $('#city').val();
     $.getJSON('cities', {term: term}, function (cities) {
         if (cities.length == 1) {
-
             changePositionForCity(cities[0]);
         } else if (cities.length > 1) {
-            var html =  '<div class="list-group" id="multiple">';
-            $.each(cities, function(index, city){
+            var html = '<div class="list-group" id="multiple">';
+            $.each(cities, function (index, city) {
                 html += '<a href="#" onClick="return false;" class="list-group-item">' + city + '</a>';
             });
 
@@ -61,7 +84,7 @@ function searchCities(term) {
                 message: html,
                 animate: true
             });
-           $('#multiple a').on('click', selectCityFromList);
+            $('#multiple a').on('click', selectCityFromList);
         }
     });
 }
@@ -70,12 +93,13 @@ function changePositionForCity(city) {
     $('#city').val(city);
     $.getJSON('position', {city: city}, function (position) {
         drawMap(position.lat, position.lng);
-    }).then(function(position){
-        $.getJSON('tweets', {lat:position.lat, lng:position.lng, city:city}, function(data){
-            tweelo.tweets = data;
-            $.each(data, function(index, tweet){
+    }).then(function (position) {
+        $.getJSON('tweets', {lat: position.lat, lng: position.lng, city: city}, function (data) {
+            var title = createCityTitle(city);
+            tweelo.map.controls[google.maps.ControlPosition.TOP_CENTER].push(title);
+            $.each(data, function (index, tweet) {
                 var marker = new google.maps.Marker({
-                    position: {lat:tweet.lat, lng:tweet.lng},
+                    position: {lat: tweet.lat, lng: tweet.lng},
                     map: tweelo.map,
                     icon: {
                         url: tweet.profile_image_url,
@@ -83,10 +107,10 @@ function changePositionForCity(city) {
                     }
                 });
                 var infowindow = new google.maps.InfoWindow({
-                    content: tweet.text,
+                    content: tweet.text.linkify(),
                     maxWidth: 200
                 });
-                marker.addListener('click', function() {
+                marker.addListener('click', function () {
                     infowindow.open(tweelo.map, marker);
                 });
                 //tweelo.map.drawOverlay({
@@ -107,3 +131,4 @@ function selectCityFromList(e) {
     changePositionForCity($(this).text());
     bootbox.hideAll();
 }
+
