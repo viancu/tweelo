@@ -13,13 +13,21 @@ class PositionFactory
     /**
      * @param $latitude
      * @param $longitude
-     * @return Position
+     * @return bool|Position
      */
     public static function create($latitude, $longitude)
     {
+        $latitude = floatval(trim($latitude));
+        $longitude = floatval(trim($longitude));
+
+        if ($latitude == 0 && $longitude == 0) {
+            return false;
+        }
+
         $position = new Position();
-        $position->setLatitude(floatval(trim($latitude)))
-            ->setLongitude(floatval(trim($longitude)));
+        $position->setLatitude($latitude)
+            ->setLongitude($longitude);
+
         return $position;
     }
 }

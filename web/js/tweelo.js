@@ -1,5 +1,5 @@
 var tweelo = tweelo || {
-        map: null,
+        map: null
     };
 
 function historyAdd(city) {
@@ -57,7 +57,7 @@ $(document).ready(function () {
 
 function drawMap(lat, lng) {
     tweelo.map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 13,
+        zoom: 11,
         center: {lat: lat, lng: lng}
     });
     console.log("draw at: " + lat + " " + lng);
@@ -73,7 +73,7 @@ function createCityTitle(city) {
     var cityData = city.split(",");
     var div = document.createElement('DIV');
     div.className = "city-title";
-    div.innerHTML = 'TWEETS ABOUT ' + cityData[0].toUpperCase();
+    div.innerHTML = '<h3>TWEETS ABOUT ' + cityData[0].toUpperCase() + '</h3>';
     return div;
 }
 

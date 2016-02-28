@@ -12,11 +12,20 @@ class TweetFactory
      * @param $latitude
      * @param $longitude
      * @param $createdAt
-     * @return Tweet
+     * @return bool|Tweet
      */
     public static function create($text, $profileImageUrl, $latitude, $longitude, $createdAt)
     {
+        $text = trim($text);
+
         $position = PositionFactory::create($latitude, $longitude);
+        if (!$position) {
+            return false;
+        }
+
+        if ($text === '' || $profileImageUrl === '') {
+            return false;
+        }
         $tweet = new Tweet();
         $tweet->setText($text)
             ->setProfileImageUrl($profileImageUrl)
@@ -25,5 +34,4 @@ class TweetFactory
 
         return $tweet;
     }
-
 }
