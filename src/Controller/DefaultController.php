@@ -48,6 +48,7 @@ class DefaultController
 
         try {
             $cities = $this->geoService->getCitiesByTerm($term);
+
             $response = [
                 'error' => false,
                 'data' => []
@@ -107,16 +108,14 @@ class DefaultController
 
         try {
             $position = PositionFactory::create($lat, $lng);
-
-
             $city = CityFactory::createFromFullyQualifiedCityName($fqcn);
             $city->setPosition($position);
-
             $tweets = $this->twitterProxyService->getTweetsForCity($city);
             $response = [
                 'error' => false,
                 'data' => []
             ];
+
             foreach ($tweets as $tweet) {
                 $response['data'][] = [
                     'text' => $tweet->getText(),

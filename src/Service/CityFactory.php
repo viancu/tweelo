@@ -14,7 +14,7 @@ class CityFactory
      * @param $name
      * @param $region
      * @param $country
-     * @return City
+     * @return false|City
      */
     public static function create($name, $region, $country)
     {
@@ -40,13 +40,12 @@ class CityFactory
 
     /**
      * @param $fqcn
-     * @return City
+     * @return false|City
      */
     public static function createFromFullyQualifiedCityName($fqcn)
     {
-        list($name, $region, $country) = explode(',', $fqcn);
+        list($name, $region, $country) = array_pad(explode(',', $fqcn, 3), 3, null);;
 
         return CityFactory::create($name, $region, $country);
-
     }
 }

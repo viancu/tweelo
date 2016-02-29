@@ -44,7 +44,6 @@ class CachingProxy
             } else {
                 $uniqueId = $method . md5(serialize($arguments));
                 $result = $this->cache->fetch($uniqueId);
-
                 if ($result === false) {
                     $result = call_user_func_array([$this->instance, $method], $arguments);
                     $this->cache->store($uniqueId, $result, $this->cachingLifeTime);
@@ -53,7 +52,7 @@ class CachingProxy
         } catch (TweeloException $e) {
             throw new TweeloException($e->getMessage());
         }
-
+        die();
         return $result;
     }
 }

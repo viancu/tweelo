@@ -4,6 +4,7 @@ namespace Tweelo\Service;
 
 use TTools\App;
 use Tweelo\Entity\City;
+use Tweelo\Entity\Position;
 use Tweelo\Entity\Tweet;
 use Tweelo\Exception\TweeloException;
 
@@ -26,6 +27,11 @@ class TwitterService
     public function getTweetsForCity(City $city)
     {
         $tweets = [];
+
+        if (!($city->getPosition() instanceof Position)) {
+            throw new TweeloException('Position for city not found');
+        }
+
         $geocode = join(',', [
             $city->getPosition()->getLatitude(),
             $city->getPosition()->getLongitude(),
@@ -43,7 +49,7 @@ class TwitterService
         }
         $count = 0;
         foreach ($tweetsData['statuses'] as $status) {
-            if ($status['coordinates'] !== null) {
+            if ($status['geo'] !== null) {
                 $tweet = TweetFactory::create(
                     $status['text'],
                     $status['user']['profile_image_url'],

@@ -1,8 +1,12 @@
 <?php
 
 // Services
-$app['geobytes.api'] = $app->share(function () {
-    return new Tweelo\Service\GeobytesApi();
+$app['curl'] = function () {
+    return new Curl\Curl();
+};
+
+$app['geobytes.api'] = $app->share(function ($app) {
+    return new Tweelo\Service\GeobytesApi($app['curl']);
 });
 
 $app['geo.service'] = $app->share(function ($app) {

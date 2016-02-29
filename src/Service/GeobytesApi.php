@@ -12,20 +12,27 @@ use Tweelo\Exception\TweeloException;
  */
 class GeobytesApi implements CityApi, PositionApi
 {
+    /** @var Curl  */
+    private $curl;
+
+    public function __construct(Curl $curl)
+    {
+        $this->curl = $curl;
+    }
+
     /**
      * @inheritDoc
      */
     public function searchCityByTerm($term)
     {
         $cities = [];
-        $curl = new Curl();
-        $curl->get('http://gd.geobytes.com/AutoCompleteCity', ['q' => trim($term)]);
 
-        if (!$curl->response || ($curl->response[0] == '' || $curl->response[0] == '%s')) {
+        $this->curl->get('http://gd.geobytes.com/AutoCompleteCity', ['q' => trim($term)]);
+        if (!$this->curl->response || ($this->curl->response[0] == '' || $this->curl->response[0] == '%s')) {
             throw new TweeloException("City not found");
         }
 
-        foreach ($curl->response as $fqcn) {
+        foreach ($this->curl->response as $fqcn) {
             $city = CityFactory::createFromFullyQualifiedCityName($fqcn);
             if ($city) {
                 $cities[] = $city;
@@ -40,12 +47,12 @@ class GeobytesApi implements CityApi, PositionApi
      */
     public function getPositionForCity(City $city)
     {
-        $curl = new Curl();
-        $curl->get('http://gd.geobytes.com/GetCityDetails', ['fqcn' => (string)$city]);
-        if(!$curl->response || ($curl->response->geobyteslatitude == 0 && $curl->response->geobyteslongitude == 0)) {
+
+        $this->curl->get('http://gd.geobytes.com/GetCityDetails', ['fqcn' => (string)$city]);
+        if(!$this->curl->response || ($this->curl->response->geobyteslatitude == 0 && $this->curl->response->geobyteslongitude == 0)) {
             throw new TweeloException("City position unknown");
         }
-        $position = PositionFactory::create($curl->response->geobyteslatitude, $curl->response->geobyteslongitude);
+        $position = PositionFactory::create($this->curl->response->geobyteslatitude, $this->curl->response->geobyteslongitude);
 
         return $position;
     }
