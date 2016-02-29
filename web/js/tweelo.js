@@ -14,7 +14,8 @@ function historyAdd(city) {
         }
     }
     history.unshift(city);
-    Cookies.set('history', history);
+    Cookies.set('history', history, {expires: 7});
+    $('#city').val('');
 }
 
 function showHistory() {
@@ -24,7 +25,7 @@ function showHistory() {
 
 function historyInit() {
     if (!Cookies.get('history')) {
-        Cookies.set('history', []);
+        Cookies.set('history', [], {expires: 7});
     }
 }
 
@@ -57,7 +58,7 @@ $(document).ready(function () {
 
 function drawMap(lat, lng) {
     tweelo.map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 11,
+        zoom: 12,
         center: {lat: lat, lng: lng}
     });
     console.log("draw at: " + lat + " " + lng);
@@ -85,7 +86,7 @@ function getUserCurrentLocation() {
         var geoSuccess = function (position) {
             drawMap(position.coords.latitude, position.coords.longitude);
         };
-        var geoError = function (position) {
+        var geoError = function (error) {
             console.log('Error occurred. Error code: ' + error.code);
         };
         navigator.geolocation.getCurrentPosition(geoSuccess, geoError, geoOptions);
@@ -123,7 +124,7 @@ function searchCities(term) {
 }
 
 function changePositionForCity(city) {
-    $('#city').val(city);
+    //$('#city').val(city);
     $.getJSON('position', {city: city}, function (response) {
         var position = false;
         if (!response.error) {
@@ -141,6 +142,8 @@ function changePositionForCity(city) {
                     var data = response.data;
                     var title = createCityTitle(city);
                     tweelo.map.controls[google.maps.ControlPosition.TOP_CENTER].push(title);
+                    var infowindow = new google.maps.InfoWindow({maxWidth: 200});
+
                     $.each(data, function (index, tweet) {
                         var marker = new google.maps.Marker({
                             position: {lat: tweet.lat, lng: tweet.lng},
@@ -150,18 +153,11 @@ function changePositionForCity(city) {
                                 size: new google.maps.Size(48, 48)
                             }
                         });
-                        var infowindow = new google.maps.InfoWindow({
-                            content: tweet.text.linkify() + '<br/>' + tweet.created_at,
-                            maxWidth: 200
+
+                        google.maps.event.addListener(marker, 'click', function (e) {
+                            infowindow.setContent(tweet.text.linkify() + '<br/>' + tweet.created_at);
+                            infowindow.open(tweelo.map, this);
                         });
-                        marker.addListener('click', function () {
-                            infowindow.open(tweelo.map, marker);
-                        });
-                        //tweelo.map.drawOverlay({
-                        //    lat: tweet.lat,
-                        //    lng: tweet.lng,
-                        //    content: '<div><img src="'+ tweet.profile_image_url +'"/></div>'
-                        //});
                     });
                 } else {
                     bootbox.alert(response.message);

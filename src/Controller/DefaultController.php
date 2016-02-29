@@ -22,6 +22,11 @@ class DefaultController
     /** @var  TwitterService */
     private $twitterProxyService;
 
+    /**
+     * DefaultController constructor.
+     * @param GeoService $geoService
+     * @param TwitterService $twitterProxyService
+     */
     public function __construct(GeoService $geoService, $twitterProxyService)
     {
         $this->geoService = $geoService;

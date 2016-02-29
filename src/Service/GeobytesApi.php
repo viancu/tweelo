@@ -15,6 +15,10 @@ class GeobytesApi implements CityApi, PositionApi
     /** @var Curl  */
     private $curl;
 
+    /**
+     * GeobytesApi constructor.
+     * @param Curl $curl
+     */
     public function __construct(Curl $curl)
     {
         $this->curl = $curl;

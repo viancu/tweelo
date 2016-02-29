@@ -12,6 +12,11 @@ class GeoService
     private $cityApiService;
     private $positionApiService;
 
+    /**
+     * GeoService constructor.
+     * @param CityApi $cityApiService
+     * @param PositionApi $positionApiService
+     */
     public function __construct(CityApi $cityApiService, PositionApi $positionApiService)
     {
         $this->cityApiService = $cityApiService;

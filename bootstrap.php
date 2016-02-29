@@ -35,7 +35,7 @@ $app->register(new TTools\Provider\Silex\TToolsServiceProvider(), array(
 ));
 $app->register(new Moust\Silex\Provider\CacheServiceProvider(), array(
     'cache.options' => array(
-        'driver' => 'apc'
+        'driver' => 'array'
     ),
 ));
 
@@ -51,9 +51,9 @@ $app->error(function (\Exception $e, $code) use ($app) {
             $message = 'We are sorry, but something went terribly wrong.';
     }
 
-    //return $app['twig']->render('404.twig',['message' => $message]);
+    return $app['twig']->render('404.twig',['message' => $message]);
 });
-$app['debug'] = true;
+
 if (isset($app_env) && in_array($app_env, ['prod', 'dev', 'test', 'staging'])) {
     $app['env'] = $app_env;
 } else {

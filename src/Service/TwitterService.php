@@ -8,11 +8,20 @@ use Tweelo\Entity\Position;
 use Tweelo\Entity\Tweet;
 use Tweelo\Exception\TweeloException;
 
+/**
+ * Class TwitterService
+ * @package Tweelo\Service
+ */
 class TwitterService
 {
     private $twitterApi;
     private $radius;
 
+    /**
+     * TwitterService constructor.
+     * @param App $twitterApi
+     * @param $radius
+     */
     public function __construct(App $twitterApi, $radius)
     {
         $this->twitterApi = $twitterApi;

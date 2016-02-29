@@ -4,6 +4,10 @@ namespace Tweelo\Service;
 
 use Tweelo\Entity\Tweet;
 
+/**
+ * Class TweetFactory
+ * @package Tweelo\Service
+ */
 class TweetFactory
 {
     /**
