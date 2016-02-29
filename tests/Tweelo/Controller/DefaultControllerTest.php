@@ -5,7 +5,6 @@ namespace Tweelo\Controller\Tests;
 use Tweelo\Controller\DefaultController;
 use Tweelo\Entity\City;
 use Tweelo\Entity\Position;
-use Tweelo\Service\GeoService;
 
 class DefaultControllerTest extends \PHPUnit_Framework_TestCase
 {
@@ -42,20 +41,4 @@ class DefaultControllerTest extends \PHPUnit_Framework_TestCase
         $controller = new DefaultController($this->geoService, $this->twiterService);
         $controller->position($this->request, $this->app);
     }
-
-    public function testTweets()
-    {
-        $position = new Position();
-        $this->request->expects($this->any())->method('get')->will($this->returnValue('a, b, c'));
-        $this->geoService->expects($this->any())->method('getPositionForCity')->will($this->returnValue($position));
-        $this->app->expects($this->any())->method('json')->will($this->returnCallback(function($response) {
-            \PHPUnit_Framework_Assert::assertFalse($response['error']);
-        }));
-
-        $controller = new DefaultController($this->geoService, $this->twiterService);
-        $controller->position($this->request, $this->app);
-    }
-
-
-
 }

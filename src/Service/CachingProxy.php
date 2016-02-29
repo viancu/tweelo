@@ -52,7 +52,7 @@ class CachingProxy
         } catch (TweeloException $e) {
             throw new TweeloException($e->getMessage());
         }
-        die();
+
         return $result;
     }
 }
